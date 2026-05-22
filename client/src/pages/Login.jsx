@@ -3,23 +3,53 @@ import { login } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import api from "../services/api";
+
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleLogin = (e) => {
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    dispatch(login({ email }));
-    navigate("/dashboard");
+    try {
+      const { data } = await api.post(
+        "/auth/login",
+        formData
+      );
+
+      dispatch(login(data.user));
+
+      alert(data.message);
+
+      navigate("/dashboard");
+
+    } catch (error) {
+      console.log(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Login Failed"
+      );
+    }
   };
 
   return (
     <div className="page">
       <div className="form-container">
+
         <h2
           style={{
             fontSize: "40px",
@@ -32,23 +62,28 @@ export default function Login() {
 
         <form onSubmit={handleLogin}>
 
-          {/* EMAIL INPUT */}
+          {/* EMAIL */}
           <input
             type="email"
+            name="email"
             placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleChange}
           />
 
-          {/* PASSWORD INPUT */}
+          {/* PASSWORD */}
           <input
             type="password"
+            name="password"
             placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleChange}
           />
 
-          <button type="submit">Login</button>
+          <button type="submit">
+            Login
+          </button>
+
         </form>
       </div>
     </div>

@@ -17,7 +17,7 @@ connectDB();
 // MIDDLEWARES
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://daskboard-dpc0.onrender.com",
     credentials: true,
   })
 );

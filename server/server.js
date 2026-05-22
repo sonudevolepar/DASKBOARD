@@ -17,7 +17,7 @@ connectDB();
 // MIDDLEWARES
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://daskboard-pink.vercel.app",
     credentials: true,
   })
 );
